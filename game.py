@@ -18,7 +18,6 @@ class Game:
         self.font = pygame.font.SysFont(None, 36)
         self.clock = pygame.time.Clock()
         self.running = True
-        
 
         self.square_size = int(self.screen_size / 10)
         self.board_size = len(self.board.state)
@@ -41,18 +40,18 @@ class Game:
         self.stalemate = False
 
         self.piece_images = {
-            1: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_pawn_png_1024px.png'), (self.piece_size, self.piece_size)),
-            2: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_knight_png_1024px.png'), (self.piece_size, self.piece_size)),
-            3: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_bishop_png_1024px.png'), (self.piece_size, self.piece_size)),
-            4: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_rook_png_1024px.png'), (self.piece_size, self.piece_size)),
-            5: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_queen_png_1024px.png'), (self.piece_size, self.piece_size)),
-            6: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/w_king_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -1: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_pawn_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -2: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_knight_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -3: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_bishop_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -4: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_rook_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -5: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_queen_png_1024px.png'), (self.piece_size, self.piece_size)),
-            -6: pygame.transform.smoothscale(pygame.image.load('/Users/luke/CODE/CHESS ENGINE/b_king_png_1024px.png'), (self.piece_size, self.piece_size)),
+            1: pygame.transform.smoothscale(pygame.image.load('w_pawn_png_1024px.png'), (self.piece_size, self.piece_size)),
+            2: pygame.transform.smoothscale(pygame.image.load('w_knight_png_1024px.png'), (self.piece_size, self.piece_size)),
+            3: pygame.transform.smoothscale(pygame.image.load('w_bishop_png_1024px.png'), (self.piece_size, self.piece_size)),
+            4: pygame.transform.smoothscale(pygame.image.load('w_rook_png_1024px.png'), (self.piece_size, self.piece_size)),
+            5: pygame.transform.smoothscale(pygame.image.load('w_queen_png_1024px.png'), (self.piece_size, self.piece_size)),
+            6: pygame.transform.smoothscale(pygame.image.load('w_king_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -1: pygame.transform.smoothscale(pygame.image.load('b_pawn_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -2: pygame.transform.smoothscale(pygame.image.load('b_knight_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -3: pygame.transform.smoothscale(pygame.image.load('b_bishop_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -4: pygame.transform.smoothscale(pygame.image.load('b_rook_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -5: pygame.transform.smoothscale(pygame.image.load('b_queen_png_1024px.png'), (self.piece_size, self.piece_size)),
+            -6: pygame.transform.smoothscale(pygame.image.load('b_king_png_1024px.png'), (self.piece_size, self.piece_size)),
         }
 
     def check_click(self):
