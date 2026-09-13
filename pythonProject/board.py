@@ -34,16 +34,6 @@ class Board:
         self.black_rook_a_moved = False
         self.black_rook_h_moved = False
 
-    @staticmethod
-    def _is_en_passant_marker(piece):
-        return piece == 7 or piece == -7
-
-    def _square_team(self, row, column):
-        piece = self.state[row][column]
-        if piece == 0 or self._is_en_passant_marker(piece):
-            return 0
-        return 1 if piece > 0 else -1
-
     def move_piece(self,row,column,new_row,new_column,promotion_piece=None):
         piece = self.state[row][column]
         team = 1 if self.state[row][column] > 0 else -1
@@ -130,14 +120,16 @@ class Board:
         if c_row < 0 or c_row > 7 or c_col < 0 or c_col > 7:
             return legal_moves
 
-        c_piece_team = self._square_team(c_row, c_col)
+        c_piece = self.state[c_row][c_col]
 
-        if c_piece_team == 0:
+        if c_piece == 0:
             legal_moves.append((c_row,c_col,None))
             legal_moves += self.long_range_recursion(c_row,c_col,dirx,diry,team)
             return legal_moves
 
-        if c_piece_team == -team:
+        if team > 0 and c_piece < 0:
+            legal_moves.append((c_row,c_col,None))
+        elif team < 0 and c_piece > 0:
             legal_moves.append((c_row,c_col,None))
         return legal_moves
 
@@ -304,19 +296,18 @@ class Board:
                 pawn_captures.append((legal_row, column-1,None))
                 pawn_captures.append((legal_row, column+1,None))
 
-            if row == 6 and self._square_team(row - 1, column) == 0: ## IF ON STARTING SQUARE, ALLOW TWO
+            if row == 6: ## IF ON STARTING SQUARE, ALLOW TWO
                 legal_row_2 = row - 2
                 pawn_moves.append((legal_row_2,column,None))
 
             for i in pawn_moves:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    if self._square_team(i[0], i[1]) == 0:
+                    if self.state[i[0]][i[1]] == 0:
                         legal_moves.append((i))
 
             for i in pawn_captures:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    target_piece = self.state[i[0]][i[1]]
-                    if self._square_team(i[0], i[1]) == -1 or target_piece == -7:
+                    if self.state[i[0]][i[1]] < 0:
                         legal_moves.append((i))
 
         if piece == -1: ##BLACK PAWN LOGIC
@@ -345,27 +336,31 @@ class Board:
                 pawn_captures.append((legal_row, column-1,None))
                 pawn_captures.append((legal_row, column+1,None))
 
-            if row == 1 and self._square_team(row + 1, column) == 0:
+            if row == 1:
                 legal_row_2 = row + 2
                 pawn_moves.append((legal_row_2,column,None))
 
             for i in pawn_moves:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    if self._square_team(i[0], i[1]) == 0:
+                    if self.state[i[0]][i[1]] == 0:
                         legal_moves.append((i))
 
             for i in pawn_captures:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    target_piece = self.state[i[0]][i[1]]
-                    if self._square_team(i[0], i[1]) == 1 or target_piece == 7:
+                    if self.state[i[0]][i[1]] > 0:
                         legal_moves.append((i))
 
         if piece == 2 or piece == -2: ## KNIGHT LOGIC
             knight_moves = ((row + 2, column + 1), (row + 2, column - 1), (row - 2, column + 1), (row - 2, column - 1), (row + 1, column + 2), (row + 1, column - 2), (row - 1, column + 2), (row - 1, column -2))
             for i in knight_moves:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    if self._square_team(i[0], i[1]) != team:
-                        legal_moves.append((i[0],i[1],None))
+                    match team:
+                        case 1:
+                            if self.state[i[0]][i[1]] <= 0:
+                                legal_moves.append((i[0],i[1],None))
+                        case -1:
+                            if self.state[i[0]][i[1]] >= 0:
+                                legal_moves.append((i[0],i[1],None))
 
         if piece == 3 or piece == -3: ##BISHOP LOGIC
             legal_moves += self.long_range_recursion(row,column,-1,-1,team)
@@ -395,8 +390,13 @@ class Board:
                           (row - 1, column - 1),(row - 1, column),(row - 1, column + 1),)
             for i in king_moves:
                 if i[0] >= 0 and i[1] >= 0 and i[0] <= 7 and i[1] <= 7:
-                    if self._square_team(i[0], i[1]) != team:
-                        legal_moves.append((i[0],i[1],None))
+                    match team:
+                        case 1:
+                            if self.state[i[0]][i[1]] <= 0:
+                                legal_moves.append((i[0],i[1],None))
+                        case -1:
+                            if self.state[i[0]][i[1]] >= 0:
+                                legal_moves.append((i[0],i[1],None))
 
             if piece == 6 and row == 7 and column == 4 and not self.white_king_moved:
                 if not self.white_rook_h_moved and self.state[7][7] == 4:
